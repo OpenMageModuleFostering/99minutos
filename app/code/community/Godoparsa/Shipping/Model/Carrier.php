@@ -10,7 +10,7 @@ class Godoparsa_Shipping_Model_Carrier
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
 		$shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-		$db =  				new mysqli("store.99minutos.com", "minutos_magento", "g9e1BqgAQtni", "minutos_api");
+		$db =  				new mysqli("54.172.87.163", "minutos", "00Minutos+01", "minutos");
     	$consult_set= 		$db->query("SELECT settings FROM tbl_usersmagento WHERE store_name = '$shop'"); 
 		$resutl_set=		mysqli_fetch_array($consult_set);
 	    $setting=			$resutl_set['settings'];

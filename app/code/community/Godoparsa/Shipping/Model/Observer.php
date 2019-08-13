@@ -88,9 +88,9 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
    		$shipping_method=		$order->getShippingDescription();
         if(($shipping_method == $express) or ($shipping_method == $programado))
         {
-        	Mage::log(var_export($shipment->debug(), TRUE));
+        	//Mage::log(var_export($shipment->debug(), TRUE));
 			$shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-			$db =  				new mysqli("store.99minutos.com", "minutos_magento", "g9e1BqgAQtni", "minutos_api");
+			$db =  				new mysqli("54.172.87.163", "minutos", "00Minutos+01", "minutos");
     		$consult_set= 		$db->query("SELECT * FROM tbl_usersmagento WHERE store_name = '$shop'");
 			$resutl_set=		mysqli_fetch_array($consult_set);
             $address=			$shippingAddress->getstreet();
@@ -125,8 +125,8 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
 			$longitude = $decoded_data['results']['0']['geometry']['location']['lng'];
 			
         	// variables
-        	$db =  new mysqli("store.99minutos.com", "minutos_magento", "g9e1BqgAQtni", "minutos_api");
         	$api_key=									'23894thfpoiq10fapo93fmapo';
+        	$user_id=									urlencode($result_set['user_id']);
         	$route=										urlencode($resutl_set['route']);
         	$street_number=								urlencode($resutl_set['street_number']);
         	$neighborhood=								urlencode($resutl_set['neighborhood']);
@@ -170,14 +170,48 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
 			$request_ship.=		"customer_phone=".$customer_phone."&";
 			$request_ship.=		"notification_email=&notes=".$notes."&dispatch=True";
         	//funcion curl para enviar la peticion de envio al sistema de 99minutos		
-			/*$chr=curl_init();
+			$chr=curl_init();
 			curl_setopt($chr, CURLOPT_URL, $request_ship);
 			curl_setopt($chr, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($chr, CURLOPT_HEADER, false);
 			curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($chr, CURLOPT_TIMEOUT, 1);
 			$url_request = curl_exec($chr);
-			curl_close($chr);*/
+			curl_close($chr);
+			
+			//url que sirve para hacer la peticion de envion al nuevo sistema de 99minutos
+			$request_n=		"https://precise-line-76299minutos.appspot.com/2/delivery/request?";
+			$request_n.=	"api_key=".$api_key."&";
+			$request_n.=	"user_id=".$user_id."&";
+			$request_n.=	"route=".$route."&";
+			$request_n.=	"street_number=".$street_number."&";
+			$request_n.=	"neighborhood=".$neighborhood."&";
+			$request_n.=	"locality=".$locality."&";
+			$request_n.=	"administrative_area_level_1=".$administrative_area_level_1."&";
+			$request_n.=	"postal_code=".$postal_code."&";
+			$request_n.=	"country=".$country."&";
+			$request_n.=	"latlng=".$d_latlng."&";
+			$request_n.=	"destination-route=".$destination_route."&";
+			$request_n.=	"destination-street_number=&";
+			$request_n.=	"destination-neighborhood=".$destination_locality."&";
+			$request_n.=	"destination-locality=".$destination_locality."&";
+			$request_n.=	"destination-administrative_area_level=".$destination_administrative_area_level."&";
+			$request_n.=	"destination-postal_code=".$destination_postal_code."&";
+			$request_n.=	"destination-country=".$destination_country."&";
+			$request_n.=	"destination-latlng=".$d_latlng."&";
+			$request_n.=	"customer_email=".$email."&";
+			$request_n.=	"customer_phone=".$customer_phone."&";
+			$request_n.=	"notification_email=&notes=".$notes."&dispatch=True";
+        	//funcion curl para enviar la peticion de envio al sistema de 99minutos		
+			$chn=curl_init();
+			curl_setopt($chn, CURLOPT_URL, $request_n);
+			curl_setopt($chn, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($chn, CURLOPT_HEADER, false);
+			curl_setopt($chn, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($chn, CURLOPT_TIMEOUT, 1);
+			$url_n = curl_exec($chn);
+			curl_close($chn);
+
 
     }
     }

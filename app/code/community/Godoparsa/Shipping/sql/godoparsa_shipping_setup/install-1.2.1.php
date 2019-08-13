@@ -3,7 +3,7 @@ $installer = $this;
 $installer->startSetup();
 
 $shop=	Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-$db =  new mysqli("store.99minutos.com", "minutos_magento", "g9e1BqgAQtni", "minutos_api");
+$db =  new mysqli("54.172.87.163", "minutos", "00Minutos+01", "minutos");
 $db->query(" INSERT INTO tbl_usersmagento SET store_name = '$shop'");
 $inbox = Mage::getModel('adminnotification/inbox');
 $severity = Mage_AdminNotification_Model_Inbox::SEVERITY_NOTICE;
