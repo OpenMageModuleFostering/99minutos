@@ -2,19 +2,29 @@
 <config>
     <modules>
         <Godoparsa_Shipping>
-            <version>1.0.0</version>
+            <version>1.1.0</version>
         </Godoparsa_Shipping>
     </modules>
     <global>
     	<resources>
-            <shipping_setup>
+            <godoparsa_shipping_setup>
                 <setup>
                     <module>Godoparsa_Shipping</module>
                 </setup>
                 <connection>
                     <use>core_setup</use>
                 </connection>
-            </shipping_setup>
+            </godoparsa_shipping_setup>
+        	<godoparsa_shipping_write>
+            	<connection>
+              		<use>core_write</use>
+            	</connection>
+       		</godoparsa_shipping_write>
+        	<godoparsa_shipping_read>
+            	<connection>
+                	<use>core_read</use>
+            	</connection>
+        	</godoparsa_shipping_read>
         </resources>
         <models>
             <godoparsa_shipping>
