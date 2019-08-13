@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/99minutos",
+    "type": "magento-module",
+    "license": "All-rights-reserved",
+    "homepage": "",
+    "description": "The fastest shipping for online shopping. (Only available in Guadalajara & Mexico City)",
+    "authors": [
+    {
+        "name": "99minutos",
+        "email": "saul@99minutos.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

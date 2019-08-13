@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+    <name>99minutos</name>
+    <version>1.0.0</version>
+    <stability>stable</stability>
+    <license>All rights reserved</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>The fastest shipping for online shopping. (Only available in Guadalajara &amp; Mexico City)</summary>
+    <description>Only available in Guadalajara &amp; Mexico City&#xD;
+&#xD;
+99minutos.com&#xD;
+&#xD;
+99minutos.com is an e-commerce ultra fast delivery service. You buy and you receive in less than 99 minutes! You can also track your product from your smartphone live! &#xD;
+You can also pay the product once it arrives, no need to pay online and you can order more than one product, try it on, and if you don&#x2019;t like it you can return it right there.&#xD;
+99minutos.com has a fulfilment service in which we will take care of all your deliveries and you can take care of selling. &#xD;
+Easy, smart and ultra fast!&#xD;
+&#xD;
+99minutos.com The fastest shipping for online shopping!&#xD;
+&#xD;
+&#xDA;nicamente disponible en la Ciudad de M&#xE9;xico y Guadalajara&#xD;
+&#xD;
+Servicio de logistica para tiendas en linea donde compras y en tiempo record recibes el producto. Ademas rastrea tu env&#xED;o desde tu dispositivo m&#xF3;vil! 99minutos.com tambi&#xE9;n ofrece sus bodegas para realizar un fulfillment completo de tus producto. &#xD;
+Es muy sencillo y muy r&#xE1;pido.&#xD;
+Compra y recibe en menos de 99 minutos, rastrea el producto en vivo, paga el producto en contra entrega, prueba varios productos y qu&#xE9;date con el que mas te gusta! Todas estas soluciones con solo un click.&#xD;
+&#xD;
+De lo quiero, a lo tengo en menos de 99 minutos.</description>
+    <notes>Completar el registro comunicandose al (55) 6363 1559 o enviar correo con el asunto Magento 99minutos.com a: hola@99minutos.com</notes>
+    <authors><author><name>99minutos</name><user>99minutos</user><email>saul@99minutos.com</email></author></authors>
+    <date>2015-02-19</date>
+    <time>06:05:39</time>
+    <contents><target name="magecommunity"><dir name="Godoparsa"><dir name="Shipping"><dir name="Helper"><file name="Data.php" hash="1c6839600686b48a7ce1d19b4d1350d7"/></dir><dir name="Model"><file name="Carrier.php" hash="774778c344f8fb4b709276ed66f2f609"/><file name="Observer.php" hash="1a6171e2ca2debce5505069f08fea79c"/><file name=".DS_Store" hash="8e927e15d29c07b05d4dca1375302c38"/></dir><dir name="etc"><file name="config.xml" hash="e6387c450d1499f3cb7971f0cd75a5b8"/><file name="system.xml" hash="9bceeef1dd7309e07ce93a5fec17ee7c"/></dir><dir name="sql"><dir name="shipping_setup"><file name="mysql4-install-1.0.0.php" hash="cd2cca9fdad6a1c1ac4b31687a9be8a9"/></dir><file name=".DS_Store" hash="b7eb3510c7ee85f2982975a460037ca3"/></dir><file name=".DS_Store" hash="76942eb471c322a4a461a24e557dd4e8"/></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Godoparsa_Shipping.xml" hash="e3018fdc7c5f7f2db4a31313d275eb0e"/></dir></target><target name="magelocale"><dir name="en_US"><dir name="template"><dir name="email"><file name="godoparsa_shipping.html" hash="be5fbe33f6fc64d02375bec27a10d77b"/></dir></dir></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.3.0</min><max>5.4.30</max></php></required></dependencies>
+</package>

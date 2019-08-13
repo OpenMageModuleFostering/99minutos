@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Godoparsa_Shipping>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Shipping />
+                <Mage_Sales />
+                <Mage_Adminhtml />
+            </depends>
+        </Godoparsa_Shipping>
+    </modules>
+</config>
