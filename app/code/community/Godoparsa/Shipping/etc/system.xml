@@ -66,7 +66,7 @@
                         </notify_custom2_email>
                         <notify_emails translate="label">
                             <label>Correos de notificación</label>
-                            <comment><![CDATA[Single or multiple emails in a following form "Firstname Lastname &lt;email&gt;", like "Branko Ajzele &lt;branko@inchoo.net&gt;", without quotation marks. In case of multiple entries, each entry goes on separate line.]]></comment>
+                            <comment><![CDATA[Estas opciones son para notificar cuando una orden se crea y tiene como método de envió a 99minutos.com, si deseas activarlas en las casillas superiores selecciona la opción "Si". Si deseas notificar a un correo que no esta definido en las configuración de tu tienda en la casilla agrega los correos deseados de la siguiente manera:  "Envíos 99minutos  &lt;hola@99minutos.com&gt;", sin comillas. Agrega un correo por línea ]]></comment>
                             <frontend_type>textarea</frontend_type>
                             <sort_order>7</sort_order>
                             <show_in_default>1</show_in_default>

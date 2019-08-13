@@ -78,142 +78,68 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
             Mage::logException($e);
         }
     }
-    public function shippedrequest( $observer)
+    public function shippedrequest($observer)
     {
-    	$programado =			'99minutos.com - Programado mismo día';
-    	$express=				'99minutos.com - En menos de 99 minutos';
+    	$schedule=				'godoparsa_shipping_large';
+    	$express=				'godoparsa_shipping_express';
         $shipment=	 			$observer->getEvent()->getShipment();
        	$order= 				$shipment->getOrder();
-       	$shippingAddress=		$order->getShippingAddress();
-   		$shipping_method=		$order->getShippingDescription();
-        if(($shipping_method == $express) or ($shipping_method == $programado))
+  		$shipping_method=		$order->getShippingMethod();
+        if(($shipping_method == $express) or ($shipping_method == $schedule))
         {
-        	//Mage::log(var_export($shipment->debug(), TRUE));
-			$shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-			$db =  				new mysqli("54.172.87.163", "minutos", "00Minutos+01", "minutos");
-    		$consult_set= 		$db->query("SELECT * FROM tbl_usersmagento WHERE store_name = '$shop'");
-			$resutl_set=		mysqli_fetch_array($consult_set);
+            if ($shipping_method == 'godoparsa_shipping_large')
+			{
+	    		$DeliveryType = 'Programado';
+			}
+			else if ($shipping_method == 'godoparsa_shipping_express')
+			{
+	    		$DeliveryType = '99minutos';
+			}	
+		    $shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+		    $shippingAddress=	$order->getShippingAddress();
             $address=			$shippingAddress->getstreet();
             function reduce($v1,$v2)
             {
             	return $v1.' '.$v2;
             }
-            $address1=			array_reduce($address,"reduce");
+            $address_finale=	array_reduce($address,'reduce');
             $city=				$shippingAddress->getcity();
             $province=			$shippingAddress->getregion();
             $zip=				$shippingAddress->getpostcode();
-            $scearch=			urlencode(implode(', ', array($address1,$city,$province,$zip)));
-            $request=		 	"http://maps.googleapis.com/maps/api/geocode/json?address=".$scearch."&sensor=false";
-            $name=				'Orden: '.$order->getIncrementId().'';
-            $store=				'Tienda:'.$resutl_set['cliente'].'';//$order->getStoreName();
+            $name_order=		'Orden: '.$order->getIncrementId().'';
             $email=				$order->getCustomerEmail();
             $phone=				$shippingAddress->getTelephone();
             $first_name=		$shippingAddress->getFirstname();
-            $last_name=			$shippingAddress->getLastname();            
-       		
-       		$ch=curl_init();
-			curl_setopt($ch, CURLOPT_URL, $request);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-		    curl_setopt($ch, CURLOPT_HTTPGET, true);
-			$url = curl_exec($ch);
-			curl_close($ch);
-			
-			$decoded_data=	json_decode($url,true);
-			$latitude = $decoded_data['results']['0']['geometry']['location']['lat'];
-			$longitude = $decoded_data['results']['0']['geometry']['location']['lng'];
-			
-        	// variables
-        	$api_key=									'23894thfpoiq10fapo93fmapo';
-        	$user_id=									urlencode($result_set['user_id']);
-        	$route=										urlencode($resutl_set['route']);
-        	$street_number=								urlencode($resutl_set['street_number']);
-        	$neighborhood=								urlencode($resutl_set['neighborhood']);
-        	$locality=									urlencode($resutl_set['locality']);
-        	$administrative_area_level_1=				urlencode($resutl_set['administrative_area']);
-        	$postal_code=								urlencode($resutl_set['postal_code']);
-        	$country=									$locality;
-        	$latlng=									urlencode($resutl_set['latlng']);
-			$destination_route=							urlencode($address1);
-			$destination_locality=						urlencode($city);
-			$destination_administrative_area_level=		urlencode($province);
-			$destination_postal_code=					urlencode($zip);
-			$d_latlng=									urlencode(implode(',', array($latitude,$longitude)));
-			$customer_phone=							urlencode($phone);
-			$destination_country=						$country;
-			$nombre=									'Cliente: '.implode(' ',array($first_name,$last_name)).'';
-		
-		    //Variable que pasa al sistema de 99minutos los datos en la seccion de notas
-			$notes=urlencode(implode(', ', array($store,$name,$nombre)));
-		
-			//url que sirve para hacer la peticion de envion al sistema de 99minutos
-			$request_ship=		"https://99minutos-dot-yaxiapi.appspot.com/2/delivery/request?";
-			$request_ship.=		"api_key=".$api_key."&";
-			$request_ship.=		"route=".$route."&";
-			$request_ship.=		"street_number=".$street_number."&";
-			$request_ship.=		"neighborhood=".$neighborhood."&";
-			$request_ship.=		"locality=".$locality."&";
-			$request_ship.=		"administrative_area_level_1=".$administrative_area_level_1."&";
-			$request_ship.=		"postal_code=".$postal_code."&";
-			$request_ship.=		"country=".$country."&";
-			$request_ship.=		"latlng=".$d_latlng."&";
-			$request_ship.=		"destination-route=".$destination_route."&";
-			$request_ship.=		"destination-street_number=&";
-			$request_ship.=		"destination-neighborhood=".$destination_locality."&";
-			$request_ship.=		"destination-locality=".$destination_locality."&";
-			$request_ship.=		"destination-administrative_area_level=".$destination_administrative_area_level."&";
-			$request_ship.=		"destination-postal_code=".$destination_postal_code."&";
-			$request_ship.=		"destination-country=".$destination_country."&";
-			$request_ship.=		"destination-latlng=".$d_latlng."&";
-			$request_ship.=		"customer_email=".$email."&";
-			$request_ship.=		"customer_phone=".$customer_phone."&";
-			$request_ship.=		"notification_email=&notes=".$notes."&dispatch=True";
-        	//funcion curl para enviar la peticion de envio al sistema de 99minutos		
-			$chr=curl_init();
-			curl_setopt($chr, CURLOPT_URL, $request_ship);
-			curl_setopt($chr, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($chr, CURLOPT_HEADER, false);
-			curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($chr, CURLOPT_TIMEOUT, 1);
-			$url_request = curl_exec($chr);
-			curl_close($chr);
-			
-			//url que sirve para hacer la peticion de envion al nuevo sistema de 99minutos
-			$request_n=		"https://precise-line-76299minutos.appspot.com/2/delivery/request?";
-			$request_n.=	"api_key=".$api_key."&";
-			$request_n.=	"user_id=".$user_id."&";
-			$request_n.=	"route=".$route."&";
-			$request_n.=	"street_number=".$street_number."&";
-			$request_n.=	"neighborhood=".$neighborhood."&";
-			$request_n.=	"locality=".$locality."&";
-			$request_n.=	"administrative_area_level_1=".$administrative_area_level_1."&";
-			$request_n.=	"postal_code=".$postal_code."&";
-			$request_n.=	"country=".$country."&";
-			$request_n.=	"latlng=".$d_latlng."&";
-			$request_n.=	"destination-route=".$destination_route."&";
-			$request_n.=	"destination-street_number=&";
-			$request_n.=	"destination-neighborhood=".$destination_locality."&";
-			$request_n.=	"destination-locality=".$destination_locality."&";
-			$request_n.=	"destination-administrative_area_level=".$destination_administrative_area_level."&";
-			$request_n.=	"destination-postal_code=".$destination_postal_code."&";
-			$request_n.=	"destination-country=".$destination_country."&";
-			$request_n.=	"destination-latlng=".$d_latlng."&";
-			$request_n.=	"customer_email=".$email."&";
-			$request_n.=	"customer_phone=".$customer_phone."&";
-			$request_n.=	"notification_email=&notes=".$notes."&dispatch=True";
-        	//funcion curl para enviar la peticion de envio al sistema de 99minutos		
-			$chn=curl_init();
-			curl_setopt($chn, CURLOPT_URL, $request_n);
-			curl_setopt($chn, CURLOPT_SSL_VERIFYPEER, false);
-			curl_setopt($chn, CURLOPT_HEADER, false);
-			curl_setopt($chn, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($chn, CURLOPT_TIMEOUT, 1);
-			$url_n = curl_exec($chn);
-			curl_close($chn);
+            $last_name=			$shippingAddress->getLastname();
+		    $payment=			$order->getPayment();
+		    $method=			$payment->getMethod();
+		    $amount=			round($payment->getAmountOrdered(), 2);
 
-
-    }
+			$content = array(
+                 'Shop'				=>	$shop,
+                 'DeliveryType' 	=>	$DeliveryType,
+                 'Address'			=>	$address_finale,
+                 'Province'			=>	$province,
+                 'City'				=>	$city,
+                 'PostalCode'		=>  $zip,
+                 'Email'			=> 	$email,
+                 'Phone'			=>	$phone,
+                 'FirstName'		=>	$first_name,
+                 'LastName'			=>	$last_name,
+                 'PaymentMethod'	=>	$method,
+                 'Amount'			=>	$amount,
+                 'Order'			=>	$name_order,
+             );
+            $ch = curl_init('http://api.99minutos.com/magento/shipping.php');
+          	curl_setopt_array($ch, array(
+              	CURLOPT_POST => TRUE,
+  	        	CURLOPT_RETURNTRANSFER => TRUE,
+      	    	CURLOPT_HTTPHEADER => array('Content-Type: application/json'),
+      			CURLOPT_POSTFIELDS => json_encode($content)));
+          	// Send the request
+          	$response = curl_exec($ch);
+          	curl_close($response);
+        	}
     }
 
 }

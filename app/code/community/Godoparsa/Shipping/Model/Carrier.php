@@ -9,70 +9,78 @@ class Godoparsa_Shipping_Model_Carrier
 
     public function collectRates(Mage_Shipping_Model_Rate_Request $request)
     {
+        $result = Mage::getModel('shipping/rate_result');
+       	$cp_pedido = $request->getDestPostcode();
+	    $total_weight=  $request->getPackageWeight(); 
 		$shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
-		$db =  				new mysqli("54.172.87.163", "minutos", "00Minutos+01", "minutos");
-    	$consult_set= 		$db->query("SELECT settings FROM tbl_usersmagento WHERE store_name = '$shop'"); 
-		$resutl_set=		mysqli_fetch_array($consult_set);
-	    $setting=			$resutl_set['settings'];
-	    $set_on=			'on';
-		if ($setting == $set_on)
-		{
-        	$result = Mage::getModel('shipping/rate_result');
-        	$cp_pedido = $request->getDestPostcode();
-	    	$total_weight=  $request->getPackageWeight(); 
-        	$max_weight=    3000000000000;
+      	$freeship		=	$request->getFreeShipping();
+      	$country        =   $request->getDestCountryId();
+      	if ($freeship == True) {
+      	    $ship = 'True';
+      	}
+      	else {
+      	    $ship = 'False';
+      	}
+        //Mage::log(var_export($request->debug(), TRUE));
+        $content = array(
+            'Shop'			=>	$shop,
+            'Freeship'      => 	$ship ,
+            'PostalCode'    => 	$cp_pedido,
+            'TotalWeight'   => 	$total_weight,
+            'Country'       =>  $country  
+        );
 
-	    	$consulta_cp = $db->query("SELECT codigopostal FROM tbl_postalcode WHERE codigopostal = '$cp_pedido'"); 
-		    $resultado_cp = mysqli_fetch_array($consulta_cp);
-	    	$cp_entrega = $resultado_cp['codigopostal'];
-	    
-	    
-        if (($cp_pedido = $cp_entrega) and ($total_weight <= $max_weight))
+		$ch = curl_init('http://api.99minutos.com/magento/shippingrate.php');
+        curl_setopt_array($ch, array(
+            CURLOPT_POST => TRUE,
+        	CURLOPT_RETURNTRANSFER => TRUE,
+        	CURLOPT_HTTPHEADER => array(
+        	    'Content-Type: application/json'
+    		),
+    		CURLOPT_POSTFIELDS => json_encode($content)
+	    ));
+
+        // Send the request
+        $response = curl_exec($ch);
+        $responseData = json_decode($response, TRUE);
+        curl_close($response);
+        if ($responseData['Status'] == 'OK')
         {
-        $result->append($this->_getExpressRate());
-        $result->append($this->_getStandardRate());   
-        }
+            //Mage::log(var_export($responseData, TRUE));
+        
+            $schedule_data = $responseData['Rates']['Schedule'];
+			$schedule = Mage::getModel('shipping/rate_result_method');
+        	$schedule->setCarrier($this->_code);
+        	$schedule->setCarrierTitle($schedule_data['CarrierTitle']);
+        	$schedule->setMethod($schedule_data['Method']);
+        	$schedule->setMethodTitle($schedule_data['Title']);
+        	$schedule->setPrice($schedule_data['Price']);
+        	$schedule->setCost($schedule_data['Cost']);
 
-        return $result;
-        }
+            $express_data = $responseData['Rates']['Express'];
+        	$express = Mage::getModel('shipping/rate_result_method');
+        	$express->setCarrier($this->_code);
+        	$express->setCarrierTitle($express_data['CarrierTitle']);
+        	$express->setMethod($express_data['Method']);
+        	$express->setMethodTitle($express_data['Title']);
+        	$express->setPrice($express_data['Price']);
+        	$express->setCost($express_data['Cost']);
+        
+        
+        $result->append($schedule);
+        $result->append($express);
+		}
+		return $result;
+
     }
 
     public function getAllowedMethods()
     {
         return array(
-            'standard'    =>  'Standard delivery',
-            'express'     =>  'Express delivery',
+			'standard'    =>  'Standard delivery',
+			'express'     =>  'Express delivery',
         );
     }
 
-    protected function _getStandardRate()
-    {
-        /** @var Mage_Shipping_Model_Rate_Result_Method $rate */
-        $rate = Mage::getModel('shipping/rate_result_method');
-
-        $rate->setCarrier($this->_code);
-        $rate->setCarrierTitle($this->getConfigData('title'));
-        $rate->setMethod('large');
-        $rate->setMethodTitle('Programado mismo día');
-        $rate->setPrice(85);
-        $rate->setCost(0);
-
-        return $rate;
-    }
-
-    protected function _getExpressRate()
-    {
-        /** @var Mage_Shipping_Model_Rate_Result_Method $rate */
-        $rate = Mage::getModel('shipping/rate_result_method');
-
-        $rate->setCarrier($this->_code);
-        $rate->setCarrierTitle($this->getConfigData('title'));
-        $rate->setMethod('express');
-        $rate->setMethodTitle('En menos de 99 minutos');
-        $rate->setPrice(115);
-        $rate->setCost(0);
-
-        return $rate;
-    }
 }
 ?>
