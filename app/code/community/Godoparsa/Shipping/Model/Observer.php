@@ -88,6 +88,7 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
    		$shipping_method=		$order->getShippingDescription();
         if(($shipping_method == $express) or ($shipping_method == $programado))
         {
+        	Mage::log(var_export($shipment->debug(), TRUE));
 			$shop=				Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
 			$db =  				new mysqli("store.99minutos.com", "minutos_magento", "g9e1BqgAQtni", "minutos_api");
     		$consult_set= 		$db->query("SELECT * FROM tbl_usersmagento WHERE store_name = '$shop'");
@@ -169,14 +170,14 @@ class Godoparsa_Shipping_Model_Observer extends Mage_Core_Helper_Abstract
 			$request_ship.=		"customer_phone=".$customer_phone."&";
 			$request_ship.=		"notification_email=&notes=".$notes."&dispatch=True";
         	//funcion curl para enviar la peticion de envio al sistema de 99minutos		
-			$chr=curl_init();
+			/*$chr=curl_init();
 			curl_setopt($chr, CURLOPT_URL, $request_ship);
 			curl_setopt($chr, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($chr, CURLOPT_HEADER, false);
 			curl_setopt($chr, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($chr, CURLOPT_TIMEOUT, 1);
 			$url_request = curl_exec($chr);
-			curl_close($chr);
+			curl_close($chr);*/
 
     }
     }
