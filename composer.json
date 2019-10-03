@@ -1,16 +1,19 @@
 {
-    "name": "OpenMageModuleFostering/99minutos",
+    "name": "OpenMageModuleFostering\/99minutos",
     "type": "magento-module",
     "license": "MIT-License",
     "homepage": "",
     "description": "The fastest shipping for online shopping",
     "authors": [
-    {
-        "name": "99 minutos",
-        "email": "saul@99minutos.com"
-    }
-],
+        {
+            "name": "99 minutos",
+            "email": "saul@99minutos.com"
+        }
+    ],
     "suggest": {
-        "magento-hackathon/magento-composer-installer": "*"
-    }
+        "magento-hackathon\/magento-composer-installer": "*"
+    },
+    "keywords": [
+        "openmage-module"
+    ]
 }
